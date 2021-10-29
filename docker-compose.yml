@@ -18,7 +18,7 @@ services:
       - "./db-data:/var/lib/mysql"
     
   app:
-    image: $DOCKER_IMAGE_NAME:latest
+    image: $DOCKER_IMAGE_NAME:$CONTAINER_VERSION
     container_name: spring-petclinic-app
     ports:
       - "8080:8080"
