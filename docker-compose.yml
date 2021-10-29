@@ -1,12 +1,30 @@
-mysql:
-  image: mysql:5.7
-  ports:
-    - "3306:3306"
-  environment:
+services:
+  db:
+    image: mysql:5.7
+    container_name: spring-petclinic-app
+    container_name: spring-petclinic-db
+    ports:
+      - "3306:3306"
+    environment:
     - MYSQL_ROOT_PASSWORD=
     - MYSQL_ALLOW_EMPTY_PASSWORD=true
     - MYSQL_USER=petclinic
     - MYSQL_PASSWORD=petclinic
     - MYSQL_DATABASE=petclinic
-  volumes:
-    - "./conf.d:/etc/mysql/conf.d:ro"
+    volumes:
+      - "./src/main/resources/db/mysql/user.sql:/docker-entrypoint-initdb.d/1.sql"
+      - "./src/main/resources/db/mysql/schema.sql:/docker-entrypoint-initdb.d/2.sql"
+      - "./src/main/resources/db/mysql/data.sql:/docker-entrypoint-initdb.d/3.sql"
+      - "./db-data:/var/lib/mysql"
+    
+  app:
+    image: antonzabolotnyi/spring-petclinic:v5
+    container_name: spring-petclinic-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: mysql
+      SPRING_DATASOURCE_URL: jdbc:mysql://spring-petclinic-db:3306/petclinic
+      SPRING_DATASOURCE_USERNAME: petclinic
+      SPRING_DATASOURCE_PASSWORD: petclinic
+      SPRING_DATASOURCE_DRIVER-CLASS-NAME-: com.mysql.jdbc.Driver
