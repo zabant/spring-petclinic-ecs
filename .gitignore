@@ -11,3 +11,4 @@ target/*
 .vscode
 _site/
 db-data/*
+*.tf
