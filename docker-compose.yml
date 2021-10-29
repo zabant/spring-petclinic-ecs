@@ -27,4 +27,3 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://spring-petclinic-db:3306/petclinic
       SPRING_DATASOURCE_USERNAME: petclinic
       SPRING_DATASOURCE_PASSWORD: petclinic
-      SPRING_DATASOURCE_DRIVER-CLASS-NAME-: com.mysql.jdbc.Driver
