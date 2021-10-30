@@ -1,0 +1,25 @@
+---
+name: Deploy spring-petclinic to CI
+hosts: $HOSTS
+become: yes
+tasks:
+  - name: Folder /app is present
+    file:
+      path: /app
+      state: present
+  - name: Delete previous docker-compose
+    file:
+      path: /app/docker-compose.yml
+      state: absent
+  - name: Copy current docker-compose
+    copy:
+      src: /var/lib/jenkins/spring-petclinic/docker-compose.yml
+      dest: /app/docker-compose.yml
+  - name: Terminate previous application
+    docker_compose:
+      project_src: /app
+      state: absent
+  - name: Run current application
+    docker_compose:
+      project_src: /app
+    register: output

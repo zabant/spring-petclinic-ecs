@@ -1,0 +1,36 @@
+---
+name: Installing requirements
+hosts: $HOSTS
+become: yes
+tasks:
+  - name: Installing epel-repo, yum-utils, java
+    yum:
+      name: 
+        - epel-release
+        - yum-utils
+        - java-11-openjdk-devel
+      state: present
+  - name: Adding Docker repository
+    command: sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - name: Install Docker
+    yum:
+      name:
+        - docker
+  - name: Download Docker-Compose
+    get_url:
+      url: https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)
+      dest: /usr/local/bin/docker-compose
+  - name: Install Docker-Compose
+    file:
+      dest: /usr/local/bin/docker-compose
+      mode: a+x
+  - name: Adding docker user and group
+    group:
+      name: docker
+      state: present
+    user:
+      name: docker
+      group: docker
+      state: present
+    
+  
