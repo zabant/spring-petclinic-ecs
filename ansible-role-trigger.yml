@@ -1,0 +1,4 @@
+---
+name: Role trigger
+hosts: $HOSTS
+roles: $ROLES
