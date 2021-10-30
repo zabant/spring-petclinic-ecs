@@ -27,6 +27,13 @@ pipeline {
             steps {
                 echo 'Running DEPLOY'
             }
+            build job: 'spring-petclinic-deploy', 
+                parameters: [
+                    choice(name: 'HOSTS', value: String.valueOf(ENVIRONMENT)),
+                    choice(name: 'ROLES', value: String.valueOf(TASK)),
+                    string(name: 'CONTAINER_VERSION', value: String.valueOf(CONTAINER_VERSION))
+
+                ]
         }
     }
 }
