@@ -1,4 +1,4 @@
 ---
-name: Role trigger
-hosts: $HOSTS
-roles: $ROLES
+- name: Role trigger
+  hosts: $HOSTS
+  roles: $ROLES
