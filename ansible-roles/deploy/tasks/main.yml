@@ -18,3 +18,6 @@
   docker_compose:
     project_src: /app
   register: output
+  environment:
+    DOCKER_CONTAINER_NAME: "{{ DOCKER_CONTAINER_NAME }}"
+    CONTAINER_VERSION: "{{ CONTAINER_VERSION }}"

@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: "{{ HOSTS }}"
   become: yes
   roles: 
     - role: ./ansible-roles/deploy

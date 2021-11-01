@@ -1,0 +1,21 @@
+pipeline {
+    agent any
+    environment {
+        DOCKER_IMAGE_NAME = "antonzabolotnyi/spring-petclinic"
+    }
+    stages {
+        stage('SETTING VARIABLES') {
+            echo 'SETTING VARIABLES'
+            sh 'echo 'DOCKER_IMAGE_NAME: ${env.DOCKER_IMAGE_NAME}' > ./ansible-roles/deploy/vars/main.yml'
+            sh 'echo 'CONTAINER_VERSION: ${env.CONTAINER_VERSION}' >> ./ansible-roles/deploy/vars/main.yml'
+        }
+        stage('DEPLOY WITH ANSIBLE') {
+            echo 'DEPLOY WITH ANSIBLE'
+            ansiblePlaybook(
+                playbook: 'ansible-deploy-role.yml',
+                inventory: 'inventory'
+                extraVars: [HOSTS: "${env.HOSTS}']
+            )
+        }
+    }
+}
