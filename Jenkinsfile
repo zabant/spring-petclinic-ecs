@@ -2,9 +2,6 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE_NAME = "antonzabolotnyi/spring-petclinic"
-        if (env.ENVIRONMENT == 'all'){
-            env.ENVIRONMENT = '[provision,deploy]'
-        }
     }
     stages {
         stage('BUILD') {
