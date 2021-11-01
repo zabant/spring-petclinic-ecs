@@ -13,7 +13,7 @@ pipeline {
             echo 'DEPLOY WITH ANSIBLE'
             ansiblePlaybook(
                 playbook: 'ansible-deploy-role.yml',
-                inventory: 'inventory'
+                inventory: 'inventory',
                 extraVars: [HOSTS: '${env.HOSTS}']
             )
         }
