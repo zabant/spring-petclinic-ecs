@@ -7,8 +7,8 @@ pipeline {
         stage('SETTING VARIABLES') {
             steps {
                 echo 'SETTING VARIABLES'
-                sh "echo DOCKER_IMAGE_NAME: '$DOCKER_IMAGE_NAME' > ./ansible-roles/deploy/vars/main.yml"
-                sh "echo CONTAINER_VERSION: '$CONTAINER_VERSION' >> ./ansible-roles/deploy/vars/main.yml"
+                sh "echo DOCKER_IMAGE_NAME: '$DOCKER_IMAGE_NAME' > ansible-roles/deploy/vars/main.yml"
+                sh "echo CONTAINER_VERSION: '$CONTAINER_VERSION' >> ansible-roles/deploy/vars/main.yml"
             }
         }
         stage('DEPLOY WITH ANSIBLE') {
