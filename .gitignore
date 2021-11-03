@@ -12,4 +12,4 @@ target/*
 _site/
 db-data/*
 *.tf
-.terraform
+.terraform*
