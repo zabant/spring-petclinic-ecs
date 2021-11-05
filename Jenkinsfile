@@ -33,11 +33,10 @@ pipeline {
                 input 'Deploy to Production?'
                 milestone(1)
                 dir("terraform") {
-                    sh "pwd"
+                    sh "terraform init -input=false"
+                    sh "terraform plan -out=tfplan -input=false"
+                    sh "terraform apply -input=false tfplan"
                 }
-                sh "terraform init -input=false"
-                sh "terraform plan -out=tfplan -input=false"
-                sh "terraform apply -input=false tfplan"
             }
         }
     }
