@@ -42,6 +42,8 @@ pipeline {
         }
     }
     post {
-        archiveArtifacts artifacts: 'tfplan'
+        always {
+            archiveArtifacts artifacts: 'tfplan'
+        }
     }
 }
