@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Running CREATE ARTIFACT'
                 script {
-                    docker.withRegistry('607828299252.dkr.ecr.us-east-1.amazonaws.com', 'ecr_login') {
+                    docker.withRegistry('https://607828299252.dkr.ecr.us-east-1.amazonaws.com', 'ecr_credentials') {
                             app.push("${env.BUILD_NUMBER}")
                             app.push("latest")
                         }
