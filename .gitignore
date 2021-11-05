@@ -11,5 +11,5 @@ target/*
 .vscode
 _site/
 db-data/*
-*.tf
-.terraform*
+ecr.tf
+terraform/.*

@@ -1,7 +1,11 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE_NAME = "antonzabolotnyi/spring-petclinic"
+        DOCKER_IMAGE_NAME = "spring-petclinic"
+        TERRAFORM_HOME = "./terraform"
+        AWS_ACCESS_KEY_ID     = credentials('AWS_ACCESS_KEY_ID')
+        AWS_SECRET_ACCESS_KEY = credentials('AWS_SECRET_ACCESS_KEY')
+        TF_IN_AUTOMATION      = '1'
     }
     stages {
         stage('BUILD') {
@@ -16,7 +20,7 @@ pipeline {
             steps {
                 echo 'Running CREATE ARTIFACT'
                 script {
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker_hub_login') {
+                    docker.withRegistry('607828299252.dkr.ecr.us-east-1.amazonaws.com', 'ecr_login') {
                             app.push("${env.BUILD_NUMBER}")
                             app.push("latest")
                         }
@@ -26,12 +30,18 @@ pipeline {
         stage('DEPLOY') {
             steps {
                 echo 'Running DEPLOY'
-                build job: 'spring-petclinic-deploy', 
-                    parameters: [
-                        string(name: 'HOSTS', value: String.valueOf(ENVIRONMENT)),
-                        string(name: 'CONTAINER_VERSION', value: String.valueOf(CONTAINER_VERSION))
-                    ]
+                input 'Deploy to Production?'
+                milestone(1)
+                dir("terraform") {
+                    sh "pwd"
+                }
+                sh "terraform init -input=false"
+                sh "terraform plan -out=tfplan -input=false"
+                sh "terraform apply -input=false tfplan"
             }
         }
+    }
+    post {
+        archiveArtifacts artifacts: 'tfplan'
     }
 }
