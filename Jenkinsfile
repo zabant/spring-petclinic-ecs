@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo 'Running CREATE ARTIFACT'
                 script {
-                    docker.withRegistry('public.ecr.aws/x0x5b9b9/spring-petclinic-repo', 'ecr_credentials') {
+                    docker.withRegistry('https://public.ecr.aws/x0x5b9b9/spring-petclinic-repo', 'ecr_credentials') {
                             app.push("${env.BUILD_NUMBER}")
                             app.push("latest")
                         }
