@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
   [
     {
       "name": "spring-petclinic-container",
-      "image": "public.ecr.aws/x0x5b9b9/spring-petclinic-repo",
+      "image": "antonzabolotnyi/spring-petclinic",
       "entryPoint": [],
       "essential": true,
       "portMappings": [
