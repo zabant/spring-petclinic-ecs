@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
   [
     {
       "name": "spring-petclinic-container",
-      "image": "antonzabolotnyi/spring-petclinic",
+      "image": "607828299252.dkr.ecr.us-east-1.amazonaws.com/spring-petclinic:latest",
       "entryPoint": [],
       "essential": true,
       "portMappings": [
@@ -60,7 +60,7 @@ resource "aws_ecs_service" "spring_petclinic_ecs_service" {
 
   network_configuration {
     subnets          = aws_subnet.private.*.id
-    assign_public_ip = false
+    assign_public_ip = true
     security_groups = [
       aws_security_group.ecs_service_sg.id,
       aws_security_group.lb_sg.id
