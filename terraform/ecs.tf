@@ -1,8 +1,13 @@
 resource "aws_ecs_cluster" "spring_petclinic_cluster" {
   name = "spring-petclinic-cluster"
+
   tags = {
     Name = "spring-petclinic-cluster"
   }
+}
+
+data "aws_ecr_repository" "spring_petclinic" {
+  name = "spring-petclinic"
 }
 
 data "aws_ecr_image" "spring_petclinic" {
@@ -10,32 +15,44 @@ data "aws_ecr_image" "spring_petclinic" {
   image_tag       = "latest"
 }
 
+resource "aws_cloudwatch_log_group" "log-group" {
+  name = "spring-petclinic-logs"
+
+  tags = {
+    Name = "spring-petclinic-logs"
+  }
+}
+
 resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
   family = "spring-petclinic-task"
 
-  container_definitions = <<DEFINITION
-  [
+  container_definitions = jsonencode([
     {
-      "name": "spring-petclinic-container",
-      "image": "607828299252.dkr.ecr.us-east-1.amazonaws.com/spring-petclinic:latest",
-      "entryPoint": [],
-      "essential": true,
-      "portMappings": [
-        {
-          "containerPort": 8080,
-          "hostPort": 8080
+      name : "spring-petclinic-container"
+      image : "${data.aws_ecr_repository.spring_petclinic.repository_url}:latest"
+      entryPoint : []
+      essential : true
+      logConfiguration : {
+        logDriver : "awslogs"
+        options : {
+          awslogs-group : "${aws_cloudwatch_log_group.log-group.id}"
+          awslogs-region : "${var.region}"
+          awslogs-stream-prefix : "spring-petclinic"
         }
-      ],
-      "cpu": 5,
-      "memory": 512,
-      "networkMode": "awsvpc"
+      }
+      portMappings : [{
+        containerPort : 8080
+        hostPort : 8080
+      }]
+      cpu : 20
+      memory : 2048
+      networkMode : "awsvpc"
     }
-  ]
-  DEFINITION
+  ])
 
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  memory                   = "512"
+  memory                   = "2048"
   cpu                      = "256"
   execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
   task_role_arn            = aws_iam_role.ecsTaskExecutionRole.arn
@@ -59,7 +76,7 @@ resource "aws_ecs_service" "spring_petclinic_ecs_service" {
   force_new_deployment = true
 
   network_configuration {
-    subnets          = aws_subnet.private.*.id
+    subnets          = [aws_subnet.private.id, aws_subnet.public.id]
     assign_public_ip = true
     security_groups = [
       aws_security_group.ecs_service_sg.id,

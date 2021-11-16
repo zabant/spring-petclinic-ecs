@@ -2,7 +2,7 @@ resource "aws_alb" "spring_petclinic_alb" {
   name               = "spring-petclinic-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.public.id, aws_subnet.public2.id]
+  subnets            = [aws_subnet.private.id, aws_subnet.public.id]
   security_groups    = [aws_security_group.lb_sg.id]
 
   tags = {
@@ -19,11 +19,11 @@ resource "aws_lb_target_group" "spring_petclinic_alb_tg" {
 
   health_check {
     healthy_threshold   = "3"
-    interval            = "300"
+    interval            = "60"
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "3"
-    path                = "/"
+    path                = "/app"
     unhealthy_threshold = "2"
   }
 

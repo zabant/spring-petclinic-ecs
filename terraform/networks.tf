@@ -8,6 +8,54 @@ resource "aws_vpc" "spring_petclinic_vpc" {
   }
 }
 
+
+
+
+
+
+
+resource "aws_vpc_endpoint" "ecr_dkr" {
+  vpc_id              = aws_vpc.spring_petclinic_vpc.id
+  private_dns_enabled = true
+  service_name        = "com.amazonaws.${var.region}.ecr.dkr"
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [aws_security_group.vpce.id]
+  subnet_ids          = [aws_subnet.private.id]
+
+  tags = {
+    Name = "vpce-dkr"
+  }
+}
+
+resource "aws_vpc_endpoint" "ecr_api" {
+  vpc_id              = aws_vpc.spring_petclinic_vpc.id
+  private_dns_enabled = true
+  service_name        = "com.amazonaws.${var.region}.ecr.api"
+  vpc_endpoint_type   = "Interface"
+  security_group_ids  = [aws_security_group.vpce.id]
+  subnet_ids          = [aws_subnet.private.id]
+
+  tags = {
+    Name = "vpce-api"
+  }
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id          = aws_vpc.spring_petclinic_vpc.id
+  service_name    = "com.amazonaws.${var.region}.s3"
+  route_table_ids = [aws_route_table.private.id]
+
+  tags = {
+    Name = "vpce-s3"
+  }
+}
+
+
+
+
+
+
+
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
   tags = {
@@ -15,10 +63,21 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
+
+
+
+
+
 data "aws_availability_zones" "azs" {
   provider = aws.region-master
   state    = "available"
 }
+
+
+
+
+
+
 
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.spring_petclinic_vpc.id
@@ -42,17 +101,10 @@ resource "aws_subnet" "public" {
   }
 }
 
-resource "aws_subnet" "public2" {
-  provider                = aws.region-master
-  vpc_id                  = aws_vpc.spring_petclinic_vpc.id
-  cidr_block              = "10.0.3.0/24"
-  availability_zone       = element(data.aws_availability_zones.azs.names, 2)
-  map_public_ip_on_launch = true
 
-  tags = {
-    Name = "spring-petclinic-public-subnet"
-  }
-}
+
+
+
 
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
@@ -68,3 +120,38 @@ resource "aws_route" "public" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
+resource "aws_route_table_association" "public_rta" {
+  subnet_id      = aws_subnet.public.id
+  route_table_id = aws_route_table.public.id
+}
+
+
+
+
+
+
+
+
+resource "aws_route_table" "private" {
+  vpc_id = aws_vpc.spring_petclinic_vpc.id
+
+  tags = {
+    Name = "spring-petclinic-private-route-table"
+  }
+}
+
+resource "aws_route" "private" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = aws_subnet.private.cidr_block
+  nat_gateway_id         = aws_nat_gateway.private_nat.id
+}
+
+resource "aws_route_table_association" "private_rta" {
+  subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
+}
+
+resource "aws_nat_gateway" "private_nat" {
+  connectivity_type = "private"
+  subnet_id         = aws_subnet.private.id
+}
