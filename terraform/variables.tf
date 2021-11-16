@@ -13,7 +13,7 @@ variable "aws_account_id" {
   default = "607828299252"
 }
 
-variable "app_image_name" {
+variable "app_name" {
   type    = string
-  default = "antonzabolotnyi/spring-petclinic"
+  default = "petclinic"
 }

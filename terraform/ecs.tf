@@ -15,14 +15,6 @@ data "aws_ecr_image" "spring_petclinic" {
   image_tag       = "latest"
 }
 
-resource "aws_cloudwatch_log_group" "log-group" {
-  name = "spring-petclinic-logs"
-
-  tags = {
-    Name = "spring-petclinic-logs"
-  }
-}
-
 resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
   family = "spring-petclinic-task"
 
@@ -40,10 +32,34 @@ resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
           awslogs-stream-prefix : "spring-petclinic"
         }
       }
-      portMappings : [{
-        containerPort : 8080
-        hostPort : 8080
-      }]
+      portMappings : [
+        {
+          containerPort : 8080
+          hostPort : 8080
+        },
+        {
+          containerPort : 3306
+          hostPort : 3306
+        }
+      ]
+      environment : [
+        {
+          name : "SPRING_PROFILES_ACTIVE"
+          value : "mysql"
+        },
+        {
+          name : "SPRING_DATASOURCE_URL"
+          value : "jdbc:${aws_db_instance.PetclinicDB.engine}://${aws_db_instance.PetclinicDB.address}:${aws_db_instance.PetclinicDB.port}/${var.app_name}"
+        },
+        {
+          name : "SPRING_DATASOURCE_USERNAME"
+          value : "${var.app_name}"
+        },
+        {
+          name : "SPRING_DATASOURCE_PASSWORD"
+          value : "${var.app_name}"
+        }
+      ]
       cpu : 20
       memory : 2048
       networkMode : "awsvpc"
