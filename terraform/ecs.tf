@@ -21,7 +21,7 @@ resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
   container_definitions = jsonencode([
     {
       name : "spring-petclinic-container"
-      image : "${data.aws_ecr_repository.spring_petclinic.repository_url}:latest"
+      image : "${data.aws_ecr_repository.spring_petclinic.repository_url}:${var.DEPLOY_CONTAINER_VERSION}"
       entryPoint : []
       essential : true
       logConfiguration : {
