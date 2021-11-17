@@ -1,3 +1,4 @@
+# Security group for ECS Service
 resource "aws_security_group" "ecs_service_sg" {
   name   = "ecs-service-sg"
   vpc_id = aws_vpc.spring_petclinic_vpc.id
@@ -23,6 +24,9 @@ resource "aws_security_group" "ecs_service_sg" {
   }
 }
 
+
+
+# Security group for Application Load Balancer
 resource "aws_security_group" "lb_sg" {
   name   = "load-balanser-sg"
   vpc_id = aws_vpc.spring_petclinic_vpc.id
@@ -48,6 +52,10 @@ resource "aws_security_group" "lb_sg" {
   }
 }
 
+
+
+
+# Security group for RDS instance
 resource "aws_security_group" "rds_sg" {
   name   = "rds-sg"
   vpc_id = aws_vpc.spring_petclinic_vpc.id
@@ -73,6 +81,9 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
+
+
+# Security group for VPC Endpoints
 #resource "aws_security_group" "vpce" {
 #  name   = "vpce-sg"
 #  vpc_id = aws_vpc.spring_petclinic_vpc.id

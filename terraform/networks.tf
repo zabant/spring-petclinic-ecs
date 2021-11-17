@@ -1,3 +1,5 @@
+# Main VPC for spring-petclinic
+
 resource "aws_vpc" "spring_petclinic_vpc" {
   provider             = aws.region-master
   cidr_block           = "10.0.0.0/16"
@@ -12,7 +14,7 @@ resource "aws_vpc" "spring_petclinic_vpc" {
 
 
 
-
+# VPC Endpoints
 
 #resource "aws_vpc_endpoint" "ecr_dkr" {
 #  vpc_id              = aws_vpc.spring_petclinic_vpc.id
@@ -54,7 +56,7 @@ resource "aws_vpc" "spring_petclinic_vpc" {
 
 
 
-
+# IGW 
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
@@ -67,6 +69,19 @@ resource "aws_internet_gateway" "igw" {
 
 
 
+# NAT Gateway
+
+resource "aws_nat_gateway" "private_nat" {
+  connectivity_type = "private"
+  subnet_id         = aws_subnet.private.id
+}
+
+
+
+
+
+
+# Data what get list of AZs
 
 data "aws_availability_zones" "azs" {
   provider = aws.region-master
@@ -78,6 +93,7 @@ data "aws_availability_zones" "azs" {
 
 
 
+# Subnets
 
 resource "aws_subnet" "private" {
   vpc_id            = aws_vpc.spring_petclinic_vpc.id
@@ -106,6 +122,8 @@ resource "aws_subnet" "public" {
 
 
 
+# Public subnet Route Table
+
 resource "aws_route_table" "public" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
 
@@ -131,6 +149,7 @@ resource "aws_route_table_association" "public_rta" {
 
 
 
+# Private subnet Route Table
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
@@ -149,9 +168,4 @@ resource "aws_route" "private" {
 resource "aws_route_table_association" "private_rta" {
   subnet_id      = aws_subnet.private.id
   route_table_id = aws_route_table.private.id
-}
-
-resource "aws_nat_gateway" "private_nat" {
-  connectivity_type = "private"
-  subnet_id         = aws_subnet.private.id
 }

@@ -1,3 +1,11 @@
+#Data for ECR repoository
+data "aws_ecr_repository" "spring_petclinic" {
+  name = "spring-petclinic"
+}
+
+
+
+#ECS main cluster
 resource "aws_ecs_cluster" "spring_petclinic_cluster" {
   name = "spring-petclinic-cluster"
 
@@ -6,15 +14,9 @@ resource "aws_ecs_cluster" "spring_petclinic_cluster" {
   }
 }
 
-data "aws_ecr_repository" "spring_petclinic" {
-  name = "spring-petclinic"
-}
 
-data "aws_ecr_image" "spring_petclinic" {
-  repository_name = "spring-petclinic"
-  image_tag       = "latest"
-}
 
+#ECS Task Definition
 resource "aws_ecs_task_definition" "spring_petclinic_ecs_task" {
   family = "spring-petclinic-task"
 
@@ -82,6 +84,10 @@ data "aws_ecs_task_definition" "main" {
   task_definition = aws_ecs_task_definition.spring_petclinic_ecs_task.family
 }
 
+
+
+
+#ECS service
 resource "aws_ecs_service" "spring_petclinic_ecs_service" {
   name                 = "spring-petclinic-ecs-service"
   cluster              = aws_ecs_cluster.spring_petclinic_cluster.id

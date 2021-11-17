@@ -1,3 +1,4 @@
+#Assume Role policy
 data "aws_iam_policy_document" "ecs_policy" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -9,7 +10,7 @@ data "aws_iam_policy_document" "ecs_policy" {
   }
 }
 
-
+#Allow to pull from ECR policy
 data "aws_iam_policy_document" "ecr_pull_policy" {
   statement {
     actions = [
@@ -29,6 +30,9 @@ data "aws_iam_policy_document" "ecr_pull_policy" {
   }
 }
 
+
+
+#IAM role for ESC
 resource "aws_iam_role" "ecsTaskExecutionRole" {
   name               = "spring-petclinic-execution-task-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_policy.json
