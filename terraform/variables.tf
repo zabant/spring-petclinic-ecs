@@ -17,3 +17,7 @@ variable "app_name" {
   type    = string
   default = "petclinic"
 }
+
+variable "DEPLOY_CONTAINER_VERSION" {
+  type = string
+}
