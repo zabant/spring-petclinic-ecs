@@ -138,7 +138,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
 
   tags = {
-    Name = "spring-petclinic-route-table"
+    Name = "spring-petclinic-public-route-table"
   }
 }
 
@@ -186,7 +186,7 @@ resource "aws_route_table" "private2" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
 
   tags = {
-    Name = "spring-petclinic-private-route-table"
+    Name = "spring-petclinic-private2-route-table"
   }
 }
 
