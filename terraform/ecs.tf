@@ -98,7 +98,7 @@ resource "aws_ecs_service" "spring_petclinic_ecs_service" {
   force_new_deployment = true
 
   network_configuration {
-    subnets          = [aws_subnet.private.id, aws_subnet.public.id]
+    subnets          = [aws_subnet.private.id, aws_subnet.private2.id]
     assign_public_ip = true
     security_groups = [
       aws_security_group.ecs_service_sg.id,

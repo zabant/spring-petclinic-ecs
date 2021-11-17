@@ -1,6 +1,6 @@
 resource "aws_db_subnet_group" "rds_subnet" {
   name       = "private"
-  subnet_ids = [aws_subnet.private.id, aws_subnet.public.id]
+  subnet_ids = [aws_subnet.private.id, aws_subnet.private2.id]
 }
 
 resource "aws_db_instance" "PetclinicDB" {

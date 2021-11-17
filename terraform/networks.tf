@@ -105,11 +105,21 @@ resource "aws_subnet" "private" {
   }
 }
 
+resource "aws_subnet" "private2" {
+  vpc_id            = aws_vpc.spring_petclinic_vpc.id
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = element(data.aws_availability_zones.azs.names, 1)
+
+  tags = {
+    Name = "spring-petclinic-private-subnet2"
+  }
+}
+
 resource "aws_subnet" "public" {
   provider                = aws.region-master
   vpc_id                  = aws_vpc.spring_petclinic_vpc.id
-  cidr_block              = "10.0.2.0/24"
-  availability_zone       = element(data.aws_availability_zones.azs.names, 1)
+  cidr_block              = "10.0.3.0/24"
+  availability_zone       = element(data.aws_availability_zones.azs.names, 2)
   map_public_ip_on_launch = true
 
   tags = {
