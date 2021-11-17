@@ -171,11 +171,32 @@ resource "aws_route_table" "private" {
 
 resource "aws_route" "private" {
   route_table_id         = aws_route_table.private.id
-  destination_cidr_block = aws_subnet.private.cidr_block
+  destination_cidr_block = aws_subnet.private2.cidr_block
   nat_gateway_id         = aws_nat_gateway.private_nat.id
 }
 
 resource "aws_route_table_association" "private_rta" {
   subnet_id      = aws_subnet.private.id
+  route_table_id = aws_route_table.private.id
+}
+
+
+
+resource "aws_route_table" "private2" {
+  vpc_id = aws_vpc.spring_petclinic_vpc.id
+
+  tags = {
+    Name = "spring-petclinic-private-route-table"
+  }
+}
+
+resource "aws_route" "private2" {
+  route_table_id         = aws_route_table.private.id
+  destination_cidr_block = aws_subnet.private.cidr_block
+  nat_gateway_id         = aws_nat_gateway.private_nat.id
+}
+
+resource "aws_route_table_association" "private2_rta" {
+  subnet_id      = aws_subnet.private2.id
   route_table_id = aws_route_table.private.id
 }
