@@ -69,7 +69,7 @@ resource "aws_internet_gateway" "igw" {
 
 
 
-# NAT Gateway
+# NAT
 
 resource "aws_nat_gateway" "private_nat" {
   connectivity_type = "private"
@@ -105,21 +105,11 @@ resource "aws_subnet" "private" {
   }
 }
 
-resource "aws_subnet" "private2" {
-  vpc_id            = aws_vpc.spring_petclinic_vpc.id
-  cidr_block        = "10.0.2.0/24"
-  availability_zone = element(data.aws_availability_zones.azs.names, 1)
-
-  tags = {
-    Name = "spring-petclinic-private-subnet2"
-  }
-}
-
 resource "aws_subnet" "public" {
   provider                = aws.region-master
   vpc_id                  = aws_vpc.spring_petclinic_vpc.id
-  cidr_block              = "10.0.3.0/24"
-  availability_zone       = element(data.aws_availability_zones.azs.names, 2)
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = element(data.aws_availability_zones.azs.names, 1)
   map_public_ip_on_launch = true
 
   tags = {
@@ -138,7 +128,7 @@ resource "aws_route_table" "public" {
   vpc_id = aws_vpc.spring_petclinic_vpc.id
 
   tags = {
-    Name = "spring-petclinic-public-route-table"
+    Name = "spring-petclinic-route-table"
   }
 }
 
@@ -171,32 +161,11 @@ resource "aws_route_table" "private" {
 
 resource "aws_route" "private" {
   route_table_id         = aws_route_table.private.id
-  destination_cidr_block = aws_subnet.private2.cidr_block
+  destination_cidr_block = aws_subnet.private.cidr_block
   nat_gateway_id         = aws_nat_gateway.private_nat.id
 }
 
 resource "aws_route_table_association" "private_rta" {
   subnet_id      = aws_subnet.private.id
-  route_table_id = aws_route_table.private.id
-}
-
-
-
-resource "aws_route_table" "private2" {
-  vpc_id = aws_vpc.spring_petclinic_vpc.id
-
-  tags = {
-    Name = "spring-petclinic-private2-route-table"
-  }
-}
-
-resource "aws_route" "private2" {
-  route_table_id         = aws_route_table.private.id
-  destination_cidr_block = aws_subnet.private.cidr_block
-  nat_gateway_id         = aws_nat_gateway.private_nat.id
-}
-
-resource "aws_route_table_association" "private2_rta" {
-  subnet_id      = aws_subnet.private2.id
   route_table_id = aws_route_table.private.id
 }

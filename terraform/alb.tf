@@ -2,7 +2,7 @@ resource "aws_alb" "spring_petclinic_alb" {
   name               = "spring-petclinic-alb"
   internal           = false
   load_balancer_type = "application"
-  subnets            = [aws_subnet.private.id, aws_subnet.private2.id, aws_subnet.public.id]
+  subnets            = [aws_subnet.private.id, aws_subnet.public.id]
   security_groups    = [aws_security_group.lb_sg.id]
 
   tags = {
