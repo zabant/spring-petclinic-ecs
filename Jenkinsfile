@@ -42,7 +42,7 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: 'tfplan'
+            archiveArtifacts artifacts: 'terraform/tfplan'
         }
     }
 }
