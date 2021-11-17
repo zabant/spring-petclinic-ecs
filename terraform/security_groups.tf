@@ -73,19 +73,19 @@ resource "aws_security_group" "rds_sg" {
   }
 }
 
-resource "aws_security_group" "vpce" {
-  name   = "vpce-sg"
-  vpc_id = aws_vpc.spring_petclinic_vpc.id
-
-  ingress {
-    from_port       = 443
-    to_port         = 443
-    protocol        = "tcp"
-    security_groups = [aws_security_group.ecs_service_sg.id]
-  }
-
-  tags = {
-    Name = "vpce-sg"
-  }
-}
+#resource "aws_security_group" "vpce" {
+#  name   = "vpce-sg"
+#  vpc_id = aws_vpc.spring_petclinic_vpc.id
+#
+#  ingress {
+#    from_port       = 443
+#    to_port         = 443
+#    protocol        = "tcp"
+#    security_groups = [aws_security_group.ecs_service_sg.id]
+#  }
+#
+#  tags = {
+#    Name = "vpce-sg"
+#  }
+#}
 

@@ -14,41 +14,41 @@ resource "aws_vpc" "spring_petclinic_vpc" {
 
 
 
-resource "aws_vpc_endpoint" "ecr_dkr" {
-  vpc_id              = aws_vpc.spring_petclinic_vpc.id
-  private_dns_enabled = true
-  service_name        = "com.amazonaws.${var.region}.ecr.dkr"
-  vpc_endpoint_type   = "Interface"
-  security_group_ids  = [aws_security_group.vpce.id]
-  subnet_ids          = [aws_subnet.private.id]
+#resource "aws_vpc_endpoint" "ecr_dkr" {
+#  vpc_id              = aws_vpc.spring_petclinic_vpc.id
+#  private_dns_enabled = true
+#  service_name        = "com.amazonaws.${var.region}.ecr.dkr"
+#  vpc_endpoint_type   = "Interface"
+#  security_group_ids  = [aws_security_group.vpce.id]
+#  subnet_ids          = [aws_subnet.private.id]
+#
+#  tags = {
+#    Name = "vpce-dkr"
+#  }
+#}
 
-  tags = {
-    Name = "vpce-dkr"
-  }
-}
+#resource "aws_vpc_endpoint" "ecr_api" {
+#  vpc_id              = aws_vpc.spring_petclinic_vpc.id
+#  private_dns_enabled = true
+#  service_name        = "com.amazonaws.${var.region}.ecr.api"
+#  vpc_endpoint_type   = "Interface"
+#  security_group_ids  = [aws_security_group.vpce.id]
+#  subnet_ids          = [aws_subnet.private.id]
+#
+#  tags = {
+#    Name = "vpce-api"
+#  }
+#}
 
-resource "aws_vpc_endpoint" "ecr_api" {
-  vpc_id              = aws_vpc.spring_petclinic_vpc.id
-  private_dns_enabled = true
-  service_name        = "com.amazonaws.${var.region}.ecr.api"
-  vpc_endpoint_type   = "Interface"
-  security_group_ids  = [aws_security_group.vpce.id]
-  subnet_ids          = [aws_subnet.private.id]
-
-  tags = {
-    Name = "vpce-api"
-  }
-}
-
-resource "aws_vpc_endpoint" "s3" {
-  vpc_id          = aws_vpc.spring_petclinic_vpc.id
-  service_name    = "com.amazonaws.${var.region}.s3"
-  route_table_ids = [aws_route_table.private.id]
-
-  tags = {
-    Name = "vpce-s3"
-  }
-}
+#resource "aws_vpc_endpoint" "s3" {
+#  vpc_id          = aws_vpc.spring_petclinic_vpc.id
+#  service_name    = "com.amazonaws.${var.region}.s3"
+#  route_table_ids = [aws_route_table.private.id]
+#
+#  tags = {
+#    Name = "vpce-s3"
+#  }
+#}
 
 
 
